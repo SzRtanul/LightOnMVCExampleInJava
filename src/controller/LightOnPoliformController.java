@@ -18,8 +18,9 @@ public class LightOnPoliformController extends LightOnGUI1View {
         System.out.println("Sorhossz: " + model.getSorHossz());
         System.out.println(Integer.toBinaryString(model.getSorHossz()));
         
-        int szektor = 0;
-        view.doGeneral(model.getSzektor(szektor), model.getSorHossz(), szektor == model.getSzektorSzam()-1 ? model.getLightCount() % 32 : 32);
+        int szektor = 2;
+        System.out.println(model.getSzektorSzam());
+        view.doGeneral(model.getSzektor(szektor), model.getSorHossz(), szektor == model.getSzektorSzam()-1 ? 32-model.getNegativ() : 32);
         init();
     }
     

@@ -72,7 +72,7 @@ public class LightOn {
        //local = getKulonbozet() & 1 | getKulonbozet() + 0b11110;
        local = getElteresMertek();
        // Szélső bit.
-      // allapot[szektor] = 
+       // allapot[szektor] = 
       
       int allit = ((0-szektor)>>31)^((szektor-allapot.length)>>30);
       lampa= lampa&0b11111;
@@ -126,9 +126,18 @@ public class LightOn {
         return (allapot.length * 32) - (adatok & ((1<<5)-1));
     }
     
-   /* public boolean getGyozelem(){
-        return 
-    }*/
+    public boolean getGyozelem(){
+        boolean both = false;
+        for (int i = 0; i < this.allapot.length-1 && both; i++) {
+            both = allapot[i] - (0 - 1) == 0;
+        }
+        both = both ? allapot[this.allapot.length-1] - (0 - 1) == 0 : false;
+        return both;
+    }
+    
+    public int getNegativ(){
+        return adatok & 0b11111;
+    }
     
     private int getKulonbozet(){
         return (adatok >> 14) & 0b11111;
