@@ -15,12 +15,20 @@ import view.LightOnViewInterface;
 public class LightOnPoliformController extends LightOnGUI1View {
     public LightOnPoliformController(LightOnGUI1View view, LightOn model){
         view.doMegjelenit();
-        System.out.println(model.getSzektor(0));
-        view.doGeneral(model.getSzektor(0), model.getSorHossz(), model.getLightCount()%32);
+        System.out.println("Sorhossz: " + model.getSorHossz());
+        System.out.println(Integer.toBinaryString(model.getSorHossz()));
+        
+        int szektor = 0;
+        view.doGeneral(model.getSzektor(szektor), model.getSorHossz(), szektor == model.getSzektorSzam()-1 ? model.getLightCount() % 32 : 32);
         init();
     }
     
     public final void init(){
-        LightOnPoliformController.addEventListener(this);
+        this.addEventListener(this);
+    }
+    
+    @Override
+    public void doAllit(){
+        System.out.println("Ez fut le.");
     }
 }

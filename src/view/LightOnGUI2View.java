@@ -16,6 +16,7 @@ public class LightOnGUI2View extends javax.swing.JFrame implements BecomeAContro
     
     public void addEventListener(LightOnViewInterface listener){
         this.listener = listener;
+        listener.doAtallit(1, 1);
     }
     
     /**

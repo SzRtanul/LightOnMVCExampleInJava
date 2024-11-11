@@ -10,7 +10,7 @@ package view;
  */
 public interface LightOnViewInterface {
     static void valamiStatikusKod(){
-        // Eddig nm tudtam, hogy lehet ilyet is
+        // Eddig nem tudtam, hogy lehet ilyet is
     }
     
     void doAtallit(int szektor, int lampa);

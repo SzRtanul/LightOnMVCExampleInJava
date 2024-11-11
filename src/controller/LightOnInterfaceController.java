@@ -18,7 +18,7 @@ public class LightOnInterfaceController implements LightOnViewInterface {
 
     @Override
     public void doAtallit(int szektor, int lampa) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        System.out.println("Ez lefutott.");
     }
     
     

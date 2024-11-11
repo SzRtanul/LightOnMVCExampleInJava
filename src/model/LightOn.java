@@ -36,10 +36,13 @@ public class LightOn {
         // System.out.println(Integer.toBinaryString((~(0b010)) & ((1<<3)-1)));
         // System.out.println(Integer.toBinaryString((0b101^((1<<3)-1))));
         // System.out.println(Integer.toBinaryString(0b111));
+        adatok=0;
+        System.out.println();
         adatok = ((sorszam*sorhossz)%32) ^
-                 ((sorhossz&0x5FF) << 5) ^
+                 ((sorhossz&0b1111111111) << 5) ^
                  ((sorhossz%32)<<15) ^
                  ((sorhossz/32)<<20);
+        System.out.println(Integer.toBinaryString(adatok));
         
     }
     

@@ -16,10 +16,11 @@ import javax.swing.JScrollPane;
  * @author Roland
  */
 public class LightOnGUI1View extends javax.swing.JFrame {
-    private static LightOnGUI1View listener;
+    private LightOnGUI1View listener;
     
-    public static void addEventListener(LightOnGUI1View listener){
-        LightOnGUI1View.listener = listener;
+    public void addEventListener(LightOnGUI1View listener){
+        this.listener = listener;
+        listener.doAllit();
     }
     
     private LightButton[] buttons = new LightButton[0];    
@@ -69,7 +70,9 @@ public class LightOnGUI1View extends javax.swing.JFrame {
         //this.PnJatekter = new JScrollPane();
     }
 
-    protected void doAllit(){}
+    protected void doAllit(){
+        System.out.println("Ez lefut.");
+    }
     
     /**
      * This method is called from within the constructor to initialize the form.
