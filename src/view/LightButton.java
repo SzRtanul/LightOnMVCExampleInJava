@@ -24,14 +24,6 @@ public class LightButton extends JButton {
         this.kapcsolva = vilagit;
         this.setLigth(kapcsolva);
         this.setVisible(true);
-        final LightButton k = this;
-        
-        this.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                k.setLigth(!k.getLight());
-            }
-        });
     }
     
     public final void setLigth(boolean kapcsolva){

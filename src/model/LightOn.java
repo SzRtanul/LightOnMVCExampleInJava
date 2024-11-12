@@ -28,7 +28,7 @@ public class LightOn {
         for (int i = 0; i < allapot.length; i++) {
             allapot[i] = (int)((Math.random() * Integer.MAX_VALUE*2)-Integer.MAX_VALUE);
         }
-        System.out.println(0xFFFFFFFE);
+        // System.out.println(0xFFFFFFFE);
         // this.adatok = adatok & ((1<<15)+(1<<5)-1);
         // System.out.println(Integer.toBinaryString(((1<<15)+(1<<5)-1)));
         // this.adatok = sorhossz < 2048 ? adatok + (sorhossz << 5) : adatok + ((1<<15)-1);
@@ -37,12 +37,10 @@ public class LightOn {
         // System.out.println(Integer.toBinaryString((0b101^((1<<3)-1))));
         // System.out.println(Integer.toBinaryString(0b111));
         adatok=0;
-        System.out.println();
         adatok = ((sorszam*sorhossz)%32) ^
                  ((sorhossz&0b1111111111) << 5) ^
                  ((sorhossz%32)<<15) ^
                  ((sorhossz/32)<<20);
-        System.out.println(Integer.toBinaryString(adatok));
         
     }
     
@@ -76,35 +74,15 @@ public class LightOn {
       
       int allit = ((0-szektor)>>31)^((szektor-allapot.length)>>30);
       lampa= lampa&0b11111;
-      szektor = szektor&0x3FF;
-       switch(local&0b111){
-           case 0b100:
-               //Bit hozzáadás az egyik szomszéd szektorhoz
-               break;
-           case 0b111:
-               // Művelet a tartomány mindkét szélén
-               break;
-           case 0b110:
-               // Művelet 1 szektoron belül
-               break;
-           case 1:
-               
-               break;
-           case 0:
-               dante:
-               break;
-           default:
-              
-               break;
-       }
+      szektor = szektor & allapot.length;
         if (szektor+getElteresMertek() < allapot.length) 
-                   allapot[szektor+getElteresMertek()] ^= 1<<(32-lampa);
-               if (szektor + getElteresMertek() >= 0) 
-                   allapot[szektor+getElteresMertek()] ^= 1<<(~(32-lampa))&0b11111;
-               if(lampa==31||lampa==0){
-                   allapot[szektor + (lampa > 0 ? 1 : -1)] ^= 1 << (~(lampa)) & 0b11111;
-               }
-               allapot[szektor] ^= 0b111 << lampa - 1;
+            allapot[szektor+getElteresMertek()] ^= 1<<(32-lampa);
+        if (szektor - getElteresMertek() >= 0) 
+            allapot[szektor-getElteresMertek()] ^= 1<<(~(32-lampa))&0b11111;
+        if(lampa==31||lampa==0){
+            allapot[szektor + (lampa > 0 ? 1 : -1)] ^= 1 << (~(lampa)) & 0b11111;
+        }
+        allapot[szektor] ^= 0b111 << lampa-1;
         return false;
     }
     

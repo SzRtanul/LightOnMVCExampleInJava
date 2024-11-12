@@ -27,7 +27,17 @@ public class LightOnMVC {
         //System.out.println(Integer.toBinaryString((muvelet^(((muvelet>>5)&0b1)<<5)-1) &0b11111));
         //doMegjelenitBit(1);
         //doMegjelenitBit(1<<45);
+       /* int v = 123;
+        int vmas=v;
+        int j;
+        for (j = 32; j > -1 && (vmas & 1)!=1; j++) {
+            vmas = vmas<<1;
+            System.out.println(vmas);
+        }
+        System.out.println(j);*/
         new LightOnPoliformController(new LightOnGUI1View(), new LightOn(8, 9));
+        
+        
     }
     
     public final static void doMegjelenitBit(int szam){

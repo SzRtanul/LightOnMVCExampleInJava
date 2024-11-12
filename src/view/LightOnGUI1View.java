@@ -7,6 +7,8 @@ package view;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -19,8 +21,10 @@ public class LightOnGUI1View extends javax.swing.JFrame {
     private LightOnGUI1View listener;
     
     public void addEventListener(LightOnGUI1View listener){
+        //System.out.println(this.getClass());
         this.listener = listener;
-        listener.doAllit();
+        //System.out.println(listener.getClass());
+        //listener.doAllit(0, 1);
     }
     
     private LightButton[] buttons = new LightButton[0];    
@@ -31,6 +35,7 @@ public class LightOnGUI1View extends javax.swing.JFrame {
      * Creates new form LightOnGUI1View
      */
     public LightOnGUI1View() {
+        listener=this;
         initComponents();
     }
     
@@ -40,14 +45,21 @@ public class LightOnGUI1View extends javax.swing.JFrame {
     
     public void doGeneral(int szektor, int sor, int utolso){
         LightButton[] newButtons = new LightButton[buttons.length+utolso];
-        System.out.println(sor);
-        
         System.arraycopy(buttons, 0, newButtons, 0, buttons.length);
         buttons = newButtons;
         int start = buttons.length-utolso;
         this.PnJatekTer.setLayout(new GridLayout(0, sor));
         for (int i = start; i < start+utolso; i++) {
             buttons[i] = new LightButton(((szektor>>i) & 1) == 1, new Point(sorszamlal*90, sor*90));
+            final int iconst = i;
+            final int szektorsza =this.szektorszamlal;
+            buttons[i].setText("%d, %d".formatted(szektorszamlal, i));
+            buttons[i].addActionListener(new ActionListener(){
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    actionButton(szektorsza, iconst);
+                }
+            });
             JPanel jp = new JPanel(new FlowLayout());
             jp.add(buttons[i]);
             this.PnJatekTer.add(jp);
@@ -59,19 +71,38 @@ public class LightOnGUI1View extends javax.swing.JFrame {
         }
         this.PnJatekTer.validate();
         this.PnJatekTer.repaint();
-        System.out.println(this.PnJatekTer.getComponents().length);
+        szektorszamlal++;
     }
     
     public void doMegjelenit(){
         this.setVisible(true);
     }
+
+    public void actionButton(int szektorszam, int lampa){
+        listener.doAllit(szektorszam, lampa);
+    }
     
     public void doClear(){
-        //this.PnJatekter = new JScrollPane();
+        this.PnJatekTer.removeAll();
     }
 
-    protected void doAllit(){
+    protected void doAllit(int szektor, int lampa){
         System.out.println("Ez lefut.");
+    }
+    
+    public void doUpdate(int[] szektorok, int negativ){
+        if(szektorok.length > 0){
+            int szektor = 0;
+            int szektorszam = 0;
+            for(int i = 0, tolas = 0; i < buttons.length; i++, tolas++) {
+                if(tolas % 32 == 0){
+                    szektor=szektorok[szektorszam];
+                    szektorszam++;
+                    tolas=0;
+                }
+                buttons[i].setLigth(((szektor>>tolas)&1) == 1);
+            }
+        }
     }
     
     /**

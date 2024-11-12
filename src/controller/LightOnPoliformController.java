@@ -13,23 +13,32 @@ import view.LightOnViewInterface;
  * @author Roland
  */
 public class LightOnPoliformController extends LightOnGUI1View {
+    LightOn model;
+    LightOnGUI1View view;
     public LightOnPoliformController(LightOnGUI1View view, LightOn model){
-        view.doMegjelenit();
-        System.out.println("Sorhossz: " + model.getSorHossz());
-        System.out.println(Integer.toBinaryString(model.getSorHossz()));
-        
-        int szektor = 2;
-        System.out.println(model.getSzektorSzam());
-        view.doGeneral(model.getSzektor(szektor), model.getSorHossz(), szektor == model.getSzektorSzam()-1 ? 32-model.getNegativ() : 32);
+        this.view = view;
+        this.model = model;
         init();
+        view.doMegjelenit();
+        
+        for (int i = 0; i < model.getSzektorSzam(); i++) {
+            view.doGeneral(model.getSzektor(i), model.getSorHossz(), 
+                    i == model.getSzektorSzam()-1 ? 32-model.getNegativ() : 32);
+        }
     }
     
     public final void init(){
-        this.addEventListener(this);
+        view.addEventListener(this);
     }
     
     @Override
-    public void doAllit(){
-        System.out.println("Ez fut le.");
+    public void doAllit(int szektor, int lampa){
+        model.doKapcsol(szektor, lampa);
+        int szektorszam = model.getSzektorSzam();
+        int[] szektorok = new int[szektorszam];
+        for (int i = 0; i < szektorszam; i++) {
+            szektorok[i] = model.getSzektor(i);
+        }
+        view.doUpdate(szektorok, model.getNegativ());
     }
 }
