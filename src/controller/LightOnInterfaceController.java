@@ -12,7 +12,7 @@ import view.LightOnViewInterface;
  * @author Roland
  */
 public class LightOnInterfaceController implements LightOnViewInterface {
-    public LightOnInterfaceController(BecomeAController view, LightOn model){
+    public LightOnInterfaceController(IfYouHaveThisTemplateICanCallYou view, LightOn model){
         view.addEventListener(this);
     }
 

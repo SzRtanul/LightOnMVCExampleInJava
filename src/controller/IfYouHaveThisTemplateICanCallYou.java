@@ -10,7 +10,7 @@ import view.LightOnViewInterface;
  *
  * @author Roland
  */
-public interface BecomeAController {
+public interface IfYouHaveThisTemplateICanCallYou {
     public static int geci = 3;
     public void addEventListener(LightOnViewInterface liserner);  
 }

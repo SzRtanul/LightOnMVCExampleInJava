@@ -80,40 +80,43 @@ public class LightOn {
         //System.out.println(((lampa& 0b1111) ^ (((~(lampa>>4)&1))-1)&0b1111));
        //LightOnMVC.doMegjelenitBit(((lampa ^ (((lampa>>4)&1)<<5)-1) & 0b1111));        
        // System.out.println(Integer.toBinaryString((~(lampa ^ (((lampa>>5)&1)<<5)-1) & 0b1111)));
-        int local2 = szektor + 1 - (~(lampa>>4) & 1) * 2;
-        int local3 = ((lampa & 0b1111) ^ (((~(lampa>>4)&1))-1)&0b1111);
        // System.out.println(local2);
-        if(getElteresMertek() == 0 && local3 >= getKulonbozet()){
-            allapot[szektor] ^= ((1<<(getSorHossz()*2))+1)<<((lampa-getSorHossz()));
-        }
-        else if (getElteresMertek() == 0 && local3 < getKulonbozet()){
-            allapot[szektor] ^= 1 << (lampa + (getSorHossz() * (1 - (2 * ((lampa >> 4) & 1)))));
-            //System.out.println(((lampa - getSorHossz()) & 0b11111));
-            //LightOnMVC.doMegjelenitBit((((~((lampa>>4)&1))-1)&0b11111));
-            if((local2 >= 0 && local2<allapot.length))
-                allapot[local2] ^= 1 << ((getSorHossz() - local3 -1) ^ (((((lampa>>4)&1))-1)&0b11111));
-            //LightOnMVC.doMegjelenitBit(1 << (getSorHossz() - local3 - 1));
-        }
+        
         
       /*  if (szektor + getElteresMertek() < allapot.length) 
             allapot[szektor+getElteresMertek()] ^= 1<<(getKulonbozet());
         if (szektor - getElteresMertek() >= 0) 
             allapot[szektor-getElteresMertek()] ^= 1<<(~(getKulonbozet()))&0b11111;*/
-        
+        int local2 = szektor + 1 - (~(lampa>>4) & 1) * 2;
+        int local3 = ((lampa & 0b1111) ^ (((~(lampa>>4)&1))-1)&0b1111);
         int sorbanhol =((szektor*32)+(lampa)) % getSorHossz();
-       // Mellette
-        if(lampa==31 || lampa == 0){
+        if(getElteresMertek() == 0 && local3 >= getKulonbozet()){
+            allapot[szektor] ^= ((1<<(getSorHossz()*2))+1)<<((lampa-getSorHossz()));
+        }
+        else if (getElteresMertek() == 0 && local3 < getKulonbozet()){
+            allapot[szektor] ^= 1 << (lampa + (getSorHossz() * (1 - (2 * ((lampa >> 4) & 1)))));
+            if((local2 >= 0 && local2<allapot.length))
+                allapot[local2] ^= 1 << ((getSorHossz() - local3 -1) ^ (((((lampa>>4)&1))-1)&0b11111));
+        }
+        
+        
+        // Mellette
+        int mellette = 0b111 &
+                ((((0 - (lampa % 31))>>31) & 1) << (3 * (((0 - lampa) >> 31) & 1))) &
+                ((((0 - (sorbanhol % getSorHossz()))>>31) & 1) << (3 * (((0 - sorbanhol) >> 31) & 1)));
+       /* if(lampa%31==0){
             if((lampa == 31 && szektor + 1 < allapot.length) || (lampa == 0 && szektor-1 >= 0)){
                 allapot[szektor + (lampa > 0 ? 1 : -1)] ^= 1 << (~(lampa) & 0b11111);
             }
             allapot[szektor] ^= 0b11 << (lampa + (lampa > 0 ? -1:0));
         }
-        else if(sorbanhol == 0 || sorbanhol==getSorHossz()-1){
-            allapot[szektor] ^= 0b11 << (lampa + (sorbanhol > 0 ? -1:0));
+        else if((sorbanhol % (getSorHossz()-1)) == 0){
+            allapot[szektor] ^= 0b11 << (lampa + (sorbanhol > 0 ? -1 : 0));
         }
-        else{
-            allapot[szektor] ^= 0b111 << lampa-1;
-        }
+        else{*/
+            LightOnMVC.doMegjelenitBit(mellette);
+            allapot[szektor] ^= (mellette & 0b111) << lampa-1;
+        //}
         return false;
     }
     

@@ -4,13 +4,13 @@
  */
 package view;
 
-import controller.BecomeAController;
+import controller.IfYouHaveThisTemplateICanCallYou;
 
 /**
  *
  * @author Roland
  */
-public class LightOnGUI3View extends javax.swing.JFrame implements BecomeAController{
+public class LightOnGUI3View extends javax.swing.JFrame implements IfYouHaveThisTemplateICanCallYou{
 
     private LightOnViewInterface listener;
     
