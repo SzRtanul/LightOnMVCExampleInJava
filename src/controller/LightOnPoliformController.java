@@ -34,6 +34,7 @@ public class LightOnPoliformController extends LightOnGUI1View {
     @Override
     public void doAllit(int szektor, int lampa){
         model.doKapcsol(szektor, lampa);
+        //model.getSzektor(0);
         int szektorszam = model.getSzektorSzam();
         int[] szektorok = new int[szektorszam];
         for (int i = 0; i < szektorszam; i++) {
