@@ -23,7 +23,7 @@ public class LightOnPoliformController extends LightOnGUI1View {
         
         for (int i = 0; i < model.getSzektorSzam(); i++) {
             view.doGeneral(model.getSzektor(i), model.getSorHossz(), 
-                    i == model.getSzektorSzam()-1 ? 32-model.getNegativ() : 32);
+                    i == model.getSzektorSzam()-1 ? model.getNegativ() : 32);
         }
     }
     

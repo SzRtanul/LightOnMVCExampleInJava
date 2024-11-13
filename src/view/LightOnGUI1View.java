@@ -53,7 +53,7 @@ public class LightOnGUI1View extends javax.swing.JFrame {
             buttons[i] = new LightButton(((szektor>>i) & 1) == 1, new Point(sorszamlal*90, sor*90));
             final int iconst = i;
             final int szektorsza =this.szektorszamlal;
-            buttons[i].setText("%d, %d".formatted(szektorszamlal, i));
+            buttons[i].setText("%d, %d".formatted(szektorsza, i));
             buttons[i].addActionListener(new ActionListener(){
                 @Override
                 public void actionPerformed(ActionEvent e) {

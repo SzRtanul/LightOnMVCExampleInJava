@@ -21,7 +21,7 @@ public class LightOn {
         //5bit:(utolso szektorhoz negatív korrigáló érték)
     
     public LightOn(){
-        this(4, 8);
+        this(8, 9);
     }
     
     public LightOn(int sorszam, int sorhossz){
@@ -42,6 +42,8 @@ public class LightOn {
                  ((sorhossz&0b1111111111) << 5) ^ // getSorHossz()
                  ((sorhossz%32)<<15) ^ // getKulonbozet
                  ((sorhossz/32)<<20); // getElteres
+        
+        System.out.println(((sorhossz%32)));
         
     }
     
@@ -71,13 +73,12 @@ public class LightOn {
       
         int allit = ((0-szektor)>>31)^((szektor-allapot.length)>>30);
         lampa = lampa&0b11111; // 
-        szektor = szektor & allapot.length;
+        szektor = szektor>=0 && szektor < allapot.length ? szektor : (szektor >=0 ? 0b1111111111 : 0);
         //System.out.println(getElteresMertek());
         //System.out.println(Integer.toBinaryString(((lampa&0b11111)^((lampa>>5&0b1<<5)-1))&0b1111));
         //LightOnMVC.doMegjelenitBit((lampa ^ (((~(lampa>>4)&1))-1)&0b1111));
         //System.out.println(((lampa& 0b1111) ^ (((~(lampa>>4)&1))-1)&0b1111));
-       //LightOnMVC.doMegjelenitBit(((lampa ^ (((lampa>>4)&1)<<5)-1) & 0b1111));
-        
+       //LightOnMVC.doMegjelenitBit(((lampa ^ (((lampa>>4)&1)<<5)-1) & 0b1111));        
        // System.out.println(Integer.toBinaryString((~(lampa ^ (((lampa>>5)&1)<<5)-1) & 0b1111)));
         int local2 = szektor + 1 - (~(lampa>>4) & 1) * 2;
         int local3 = ((lampa & 0b1111) ^ (((~(lampa>>4)&1))-1)&0b1111);
@@ -86,22 +87,20 @@ public class LightOn {
             allapot[szektor] ^= ((1<<(getSorHossz()*2))+1)<<((lampa-getSorHossz()));
         }
         else if (getElteresMertek() == 0 && local3 < getKulonbozet()){
-            allapot[szektor] ^= 1 << (lampa + (getSorHossz() * (1 - (2 * ((lampa>>4) & 1)))));
+            allapot[szektor] ^= 1 << (lampa + (getSorHossz() * (1 - (2 * ((lampa >> 4) & 1)))));
             //System.out.println(((lampa - getSorHossz()) & 0b11111));
             //LightOnMVC.doMegjelenitBit((((~((lampa>>4)&1))-1)&0b11111));
             if((local2 >= 0 && local2<allapot.length))
                 allapot[local2] ^= 1 << ((getSorHossz() - local3 -1) ^ (((((lampa>>4)&1))-1)&0b11111));
             //LightOnMVC.doMegjelenitBit(1 << (getSorHossz() - local3 - 1));
         }
-       /*
-        if (szektor + getElteresMertek() < allapot.length) 
+        
+      /*  if (szektor + getElteresMertek() < allapot.length) 
             allapot[szektor+getElteresMertek()] ^= 1<<(getKulonbozet());
         if (szektor - getElteresMertek() >= 0) 
-            allapot[szektor-getElteresMertek()] ^= 1<<(~(getKulonbozet()))&0b11111;
-        */
+            allapot[szektor-getElteresMertek()] ^= 1<<(~(getKulonbozet()))&0b11111;*/
         
-       
-      
+        int sorbanhol =((szektor*32)+(lampa)) % getSorHossz();
        // Mellette
         if(lampa==31 || lampa == 0){
             if((lampa == 31 && szektor + 1 < allapot.length) || (lampa == 0 && szektor-1 >= 0)){
@@ -109,10 +108,12 @@ public class LightOn {
             }
             allapot[szektor] ^= 0b11 << (lampa + (lampa > 0 ? -1:0));
         }
+        else if(sorbanhol == 0 || sorbanhol==getSorHossz()-1){
+            allapot[szektor] ^= 0b11 << (lampa + (sorbanhol > 0 ? -1:0));
+        }
         else{
             allapot[szektor] ^= 0b111 << lampa-1;
         }
-       
         return false;
     }
     

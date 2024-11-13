@@ -35,9 +35,9 @@ public class LightOnMVC {
             System.out.println(vmas);
         }
         System.out.println(j);*/
-        new LightOnPoliformController(new LightOnGUI1View(), new LightOn(8, 9));
-        
-        
+        // new LightOnPoliformController(new LightOnGUI1View(), new LightOn(8, 1023));
+        // new LightOnPoliformController(new LightOnGUI1View(), new LightOn(8, 9));
+        //new LightOnPoliformController(new LightOnGUI1View(), new LightOn(8, 31));
     }
     
     public final static void doMegjelenitBit(int szam){
