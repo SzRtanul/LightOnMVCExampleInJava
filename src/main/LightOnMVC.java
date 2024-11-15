@@ -4,9 +4,11 @@
  */
 package main;
 
+import controller.LightOnInterfaceController;
 import controller.LightOnPoliformController;
 import model.LightOn;
 import view.LightOnGUI1View;
+import view.LightOnGUI2View;
 
 /**
  *
@@ -27,7 +29,9 @@ public class LightOnMVC {
         // new LightOnPoliformController(new LightOnGUI1View(), new LightOn(8, 32));
         // new LightOnPoliformController(new LightOnGUI1View(), new LightOn(8, 33));
         // new LightOnPoliformController(new LightOnGUI1View(), new LightOn(8, 1023));
-         new LightOnPoliformController(new LightOnGUI1View(), new LightOn(9, 8));
+        // new LightOnPoliformController(new LightOnGUI1View(), new LightOn(9, 8));
+        
+        new LightOnInterfaceController(new LightOnGUI2View(), new LightOn(9, 8));
     }
     
     public final static void doMegjelenitBit(int szam){

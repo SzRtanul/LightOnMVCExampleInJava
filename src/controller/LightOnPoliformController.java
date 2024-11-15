@@ -27,7 +27,7 @@ public class LightOnPoliformController extends LightOnGUI1View {
         }
     }
     
-    public final void init(){
+    private final void init(){
         view.addEventListener(this);
     }
     

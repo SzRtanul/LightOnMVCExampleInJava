@@ -5,6 +5,13 @@
 package view;
 
 import controller.IfYouHaveThisTemplateICanCallYou;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 /**
  *
@@ -14,6 +21,7 @@ public class LightOnGUI2View extends javax.swing.JFrame implements IfYouHaveThis
 
     private LightOnViewInterface listener;
     
+    @Override
     public void addEventListener(LightOnViewInterface listener){
         this.listener = listener;
         listener.doAtallit(1, 1);
@@ -35,14 +43,30 @@ public class LightOnGUI2View extends javax.swing.JFrame implements IfYouHaveThis
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
+        PnJatekTer = new javax.swing.JPanel();
+        Bt_restart = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jButton1.setText("jButton1");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        PnJatekTer.setAutoscrolls(true);
+        PnJatekTer.setInheritsPopupMenu(true);
+        PnJatekTer.setName(""); // NOI18N
+
+        javax.swing.GroupLayout PnJatekTerLayout = new javax.swing.GroupLayout(PnJatekTer);
+        PnJatekTer.setLayout(PnJatekTerLayout);
+        PnJatekTerLayout.setHorizontalGroup(
+            PnJatekTerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        PnJatekTerLayout.setVerticalGroup(
+            PnJatekTerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 512, Short.MAX_VALUE)
+        );
+
+        Bt_restart.setText("Restart");
+        Bt_restart.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                Bt_restartActionPerformed(evt);
             }
         });
 
@@ -50,26 +74,36 @@ public class LightOnGUI2View extends javax.swing.JFrame implements IfYouHaveThis
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(168, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addGap(157, 157, 157))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(537, 537, 537)
+                .addComponent(Bt_restart)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(PnJatekTer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(56, 56, 56)
-                .addComponent(jButton1)
-                .addContainerGap(221, Short.MAX_VALUE))
+                .addGap(3, 3, 3)
+                .addComponent(PnJatekTer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(Bt_restart))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void Bt_restartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Bt_restartActionPerformed
+        listener.doRestart();
+    }//GEN-LAST:event_Bt_restartActionPerformed
 
+    private LightButton[] buttons = new LightButton[0];    
+    private int sorszamlal = 0;
+    private int sor = 0;
+    private int szektorszamlal = 0;
+    
     /**
      * @param args the command line arguments
      */
@@ -106,6 +140,76 @@ public class LightOnGUI2View extends javax.swing.JFrame implements IfYouHaveThis
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton Bt_restart;
+    private javax.swing.JPanel PnJatekTer;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void doVege() {
+        JOptionPane.showMessageDialog(this, "Gratulálok! Győztél!");
+        listener.doRestart();
+    }
+
+    @Override
+    public void doClear() {
+        this.PnJatekTer.removeAll();
+    }
+
+    @Override
+    public void doGeneral(int szektor, int sor) {
+        doGeneral(szektor, sor, 32);
+    }
+
+    @Override
+    public void doGeneral(int szektor, int sor, int utolso) {
+         LightButton[] newButtons = new LightButton[buttons.length+utolso];
+        System.arraycopy(buttons, 0, newButtons, 0, buttons.length);
+        buttons = newButtons;
+        int start = buttons.length - utolso;
+        this.PnJatekTer.setLayout(new GridLayout(0, sor));
+        for (int i = start; i < start+utolso; i++) {
+            buttons[i] = new LightButton(((szektor>>i) & 1) == 1, new Point(sorszamlal*90, sor*90));
+            final int iconst = i;
+            final int szektorsza =this.szektorszamlal;
+            buttons[i].setText("%d, %d".formatted(szektorsza, i));
+            buttons[i].addActionListener(new ActionListener(){
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    listener.doAtallit(szektorsza, iconst);
+                }
+            });
+            JPanel jp = new JPanel(new FlowLayout());
+            jp.add(buttons[i]);
+            this.PnJatekTer.add(jp);
+            sorszamlal++;
+            if (sorszamlal==sor){
+                sorszamlal = 0;
+                this.sor++;
+            }
+        }
+        this.PnJatekTer.validate();
+        this.PnJatekTer.repaint();
+        szektorszamlal++;
+    }
+
+    @Override
+    public void doUpdate(int[] szektorok, int negativ) {
+        if(szektorok.length > 0){
+            int szektor = 0;
+            int szektorszam = 0;
+            for(int i = 0, tolas = 0; i < buttons.length; i++, tolas++) {
+                if(tolas % 32 == 0){
+                    szektor=szektorok[szektorszam];
+                    szektorszam++;
+                    tolas=0;
+                }
+                buttons[i].setLigth(((szektor>>tolas)&1) == 1);
+            }
+        }
+    }
+
+    @Override
+    public void doMegjelenit() {
+        this.setVisible(true);
+    }
 }
