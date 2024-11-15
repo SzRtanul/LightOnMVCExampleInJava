@@ -15,7 +15,7 @@ public class LightOn {
     private int[] allapot;
     private int adatok; 
         //--1bit:(32%sorhossz>0)
-        //5bit:(32/sorhossz)[eltérés], 
+        //5bit:((sorhossz*2+1)/32)[eltérés], 
         //5bit:(32%sorhossz)[különbözet], 
         //10bit:(sorhossz), 
         //5bit:(utolso szektorhoz negatív korrigáló érték)
@@ -27,7 +27,7 @@ public class LightOn {
     public LightOn(int sorszam, int sorhossz){
         allapot = new int[((sorszam*sorhossz)/32)+1];
         for (int i = 0; i < allapot.length; i++) {
-            allapot[i] = (int)((Math.random() * Integer.MAX_VALUE*2)-Integer.MAX_VALUE);
+            //allapot[i] = (int)((Math.random() * Integer.MAX_VALUE*2)-Integer.MAX_VALUE);
         }
         // System.out.println(0xFFFFFFFE);
         // this.adatok = adatok & ((1<<15)+(1<<5)-1);
@@ -41,82 +41,58 @@ public class LightOn {
         adatok = ((sorszam*sorhossz)%32) ^ // getNegativ()
                  ((sorhossz&0b1111111111) << 5) ^ // getSorHossz()
                  ((sorhossz%32)<<15) ^ // getKulonbozet
-                 ((sorhossz/32)<<20); // getElteres
+                 (((sorhossz)/32)<<20); // getElteres
         
         System.out.println(((sorhossz%32)));
         
     }
     
     public boolean doKapcsol(int szektor, int lampa){
-        //int ertek = (lampa)+1;
-        //System.out.println(allapot[szektor]);
-        // allapot[szektor] = ~((((allapot[szektor] >> lampa)-1) & (1<<3) -1) << lampa+1) 
-        //         + (allapot[szektor] & ((1 << 3)-1)<<lampa-1);
-       
-        //allapot[szektor] ^= ((1 << 3) - 1) << (lampa - 2);
-        //allapot[szektor] ^= ((1 << (getSorHossz() * 2)) + 1) << (((szektor * 32 + lampa) % getSorHossz()));
-        if(false){
-            // sorHossz%32==0: A szektorszámok közötti eltérés biztos, hogy 0.
-            // (sorHosz%32==x)&0b1111: A szektorszámok közötti eltérés akkor lép fel, ha az alapszektor 
-            //                 egyik szélétől kissebb a távolság, mint az x.
-            // ((lampa + 1)%32)&0b1111<2: A megjelölt lámpa az egyik szektor szélén van.
-            // 
-        }
-        // Lepesek:
-        // 
-       
-        int local = 0; //1bit:(1 szektorral lóg ki mindkét oldalon), 1bit:(Nem tér ki), 1bit:(32-es tartományon belül)
-        //local = getKulonbozet() & 1 | getKulonbozet() + 0b11110;
-        local = getElteresMertek();
-        // Szélső bit.
-        // allapot[szektor] = 
-      
-        int allit = ((0-szektor)>>31)^((szektor-allapot.length)>>30);
         lampa = lampa&0b11111; // 
         szektor = szektor>=0 && szektor < allapot.length ? szektor : (szektor >=0 ? 0b1111111111 : 0);
-        //System.out.println(getElteresMertek());
-        //System.out.println(Integer.toBinaryString(((lampa&0b11111)^((lampa>>5&0b1<<5)-1))&0b1111));
-        //LightOnMVC.doMegjelenitBit((lampa ^ (((~(lampa>>4)&1))-1)&0b1111));
-        //System.out.println(((lampa& 0b1111) ^ (((~(lampa>>4)&1))-1)&0b1111));
-       //LightOnMVC.doMegjelenitBit(((lampa ^ (((lampa>>4)&1)<<5)-1) & 0b1111));        
-       // System.out.println(Integer.toBinaryString((~(lampa ^ (((lampa>>5)&1)<<5)-1) & 0b1111)));
-       // System.out.println(local2);
-        
-        
-      /*  if (szektor + getElteresMertek() < allapot.length) 
-            allapot[szektor+getElteresMertek()] ^= 1<<(getKulonbozet());
-        if (szektor - getElteresMertek() >= 0) 
-            allapot[szektor-getElteresMertek()] ^= 1<<(~(getKulonbozet()))&0b11111;*/
-        int local2 = szektor + 1 - (~(lampa>>4) & 1) * 2;
-        int local3 = ((lampa & 0b1111) ^ (((~(lampa>>4)&1))-1)&0b1111);
-        int sorbanhol =((szektor*32)+(lampa)) % getSorHossz();
+    
+        // int local2 = szektor + 1 - (~(lampa>>4) & 1) * 2;
+        int local3 = ((lampa & 0b1111) ^ (((~(lampa>>4)&1))-1)&0b1111); // Tavolsag
+       
+        //Felette
         if(getElteresMertek() == 0 && local3 >= getKulonbozet()){
             allapot[szektor] ^= ((1<<(getSorHossz()*2))+1)<<((lampa-getSorHossz()));
         }
-        else if (getElteresMertek() == 0 && local3 < getKulonbozet()){
-            allapot[szektor] ^= 1 << (lampa + (getSorHossz() * (1 - (2 * ((lampa >> 4) & 1)))));
-            if((local2 >= 0 && local2<allapot.length))
-                allapot[local2] ^= 1 << ((getSorHossz() - local3 -1) ^ (((((lampa>>4)&1))-1)&0b11111));
-        }
-        
-        
-        // Mellette
-        int mellette = 0b111 &
-                ((((0 - (lampa % 31))>>31) & 1) << (3 * (((0 - lampa) >> 31) & 1))) &
-                ((((0 - (sorbanhol % getSorHossz()))>>31) & 1) << (3 * (((0 - sorbanhol) >> 31) & 1)));
-       /* if(lampa%31==0){
-            if((lampa == 31 && szektor + 1 < allapot.length) || (lampa == 0 && szektor-1 >= 0)){
-                allapot[szektor + (lampa > 0 ? 1 : -1)] ^= 1 << (~(lampa) & 0b11111);
+        else{
+            // Felső
+            if((((szektor * 32)+lampa) - getSorHossz()) >= 0){
+                allapot[(((szektor * 32)+lampa) - getSorHossz())/32] ^= 
+                        (1 << ((lampa-getSorHossz())&0b11111));
             }
-            allapot[szektor] ^= 0b11 << (lampa + (lampa > 0 ? -1:0));
+            // Alsó
+            if((((szektor * 32)+lampa) + getSorHossz()) < getLightCount()){ 
+                allapot[(((szektor * 32)+lampa) + getSorHossz())/32] ^= (1 << (((lampa+getSorHossz())&0b11111)));
+            }
         }
-        else if((sorbanhol % (getSorHossz()-1)) == 0){
-            allapot[szektor] ^= 0b11 << (lampa + (sorbanhol > 0 ? -1 : 0));
+        
+        
+        int sorbanhol =((szektor*32)+(lampa)) % getSorHossz();
+        // Mellette
+        int local = 0b111;
+        System.out.println((sorbanhol+1)%(getSorHossz()));
+        if(getSorHossz()-1 > 0 && (((sorbanhol)%(getSorHossz()-1))) == 0){
+            local = (sorbanhol == 0 ? 0b110 : 0b011);
+            System.out.println("EZI");
         }
-        else{*/
-            LightOnMVC.doMegjelenitBit(mellette);
-            allapot[szektor] ^= (mellette & 0b111) << lampa-1;
-        //}
+        else if (getSorHossz() == 1) local = 0b010;
+        if(lampa%31!=0){
+            allapot[szektor] ^= ((local) << lampa-1);
+            System.out.println("EZ");
+        }
+        else{
+            if(lampa%31==0){
+                allapot[szektor] ^= lampa == 0 ? (local & 0b110) >> 1 : (local & 0b011) << lampa-1;
+                if(szektor + (lampa==0 ? -1 : 1) >= 0 && szektor + (lampa==0 ? -1 : 1) < allapot.length){
+                    allapot[szektor + (lampa==0 ? -1 : 1)] ^= 
+                            (lampa!=0 ? (local&0b100)>>2 : local & 1) << (31 - lampa);
+                }
+            }
+        }
         return false;
     }
     
@@ -135,15 +111,16 @@ public class LightOn {
     }
     
     public int getLightCount(){
-        return (allapot.length * 32) - (adatok & ((1<<5)-1));
+        return (allapot.length * 32) - (32-(adatok & ((1<<5)-1)));
     }
     
     public boolean getGyozelem(){
-        boolean both = false;
+        boolean both = true;
         for (int i = 0; i < this.allapot.length-1 && both; i++) {
             both = allapot[i] == 0;
+            System.out.println(allapot[i]);
         }
-        both = both ? (allapot[this.allapot.length-1] & ((1<<(32-getNegativ()))-1)) == 0 : false;
+        both = both ? (allapot[this.allapot.length-1] & ((1<<(getNegativ()))-1)) == 0 : false;
         return both;
     }
     

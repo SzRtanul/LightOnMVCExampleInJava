@@ -47,7 +47,7 @@ public class LightOnGUI1View extends javax.swing.JFrame {
         LightButton[] newButtons = new LightButton[buttons.length+utolso];
         System.arraycopy(buttons, 0, newButtons, 0, buttons.length);
         buttons = newButtons;
-        int start = buttons.length-utolso;
+        int start = buttons.length - utolso;
         this.PnJatekTer.setLayout(new GridLayout(0, sor));
         for (int i = start; i < start+utolso; i++) {
             buttons[i] = new LightButton(((szektor>>i) & 1) == 1, new Point(sorszamlal*90, sor*90));
