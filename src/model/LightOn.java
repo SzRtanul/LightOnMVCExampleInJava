@@ -27,7 +27,7 @@ public class LightOn {
     public LightOn(int sorszam, int sorhossz){
         allapot = new int[((sorszam*sorhossz)/32)+1];
         for (int i = 0; i < allapot.length; i++) {
-            //allapot[i] = (int)((Math.random() * Integer.MAX_VALUE*2)-Integer.MAX_VALUE);
+            allapot[i] = (int)((Math.random() * Integer.MAX_VALUE*2)-Integer.MAX_VALUE);
         }
         // System.out.println(0xFFFFFFFE);
         // this.adatok = adatok & ((1<<15)+(1<<5)-1);
@@ -77,12 +77,10 @@ public class LightOn {
         System.out.println((sorbanhol+1)%(getSorHossz()));
         if(getSorHossz()-1 > 0 && (((sorbanhol)%(getSorHossz()-1))) == 0){
             local = (sorbanhol == 0 ? 0b110 : 0b011);
-            System.out.println("EZI");
         }
         else if (getSorHossz() == 1) local = 0b010;
         if(lampa%31!=0){
             allapot[szektor] ^= ((local) << lampa-1);
-            System.out.println("EZ");
         }
         else{
             if(lampa%31==0){
