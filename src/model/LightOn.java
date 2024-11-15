@@ -26,25 +26,20 @@ public class LightOn {
     
     public LightOn(int sorszam, int sorhossz){
         allapot = new int[((sorszam*sorhossz)/32)+1];
-        for (int i = 0; i < allapot.length; i++) {
-            allapot[i] = (int)((Math.random() * Integer.MAX_VALUE*2)-Integer.MAX_VALUE);
-        }
-        // System.out.println(0xFFFFFFFE);
-        // this.adatok = adatok & ((1<<15)+(1<<5)-1);
-        // System.out.println(Integer.toBinaryString(((1<<15)+(1<<5)-1)));
-        // this.adatok = sorhossz < 2048 ? adatok + (sorhossz << 5) : adatok + ((1<<15)-1);
-        // System.out.println(Integer.toBinaryString(adatok));
-        // System.out.println(Integer.toBinaryString((~(0b010)) & ((1<<3)-1)));
-        // System.out.println(Integer.toBinaryString((0b101^((1<<3)-1))));
-        // System.out.println(Integer.toBinaryString(0b111));
+        this.doRestart();
         adatok = 0;
         adatok = ((sorszam*sorhossz)%32) ^ // getNegativ()
                  ((sorhossz&0b1111111111) << 5) ^ // getSorHossz()
                  ((sorhossz%32)<<15) ^ // getKulonbozet
                  (((sorhossz)/32)<<20); // getElteres
         
-        System.out.println(((sorhossz%32)));
-        
+    }
+    
+    public final void doRestart(){
+        for (int i = 0; i < allapot.length; i++) {
+            //allapot[i] = (int)((Math.random() * Integer.MAX_VALUE*2)-Integer.MAX_VALUE);
+            allapot[i] = (int)(Math.random() * 0xFFFFFFF);
+        }
     }
     
     public boolean doKapcsol(int szektor, int lampa){
@@ -66,15 +61,13 @@ public class LightOn {
             }
             // Alsó
             if((((szektor * 32)+lampa) + getSorHossz()) < getLightCount()){ 
-                allapot[(((szektor * 32)+lampa) + getSorHossz())/32] ^= (1 << (((lampa+getSorHossz())&0b11111)));
+                allapot[(((szektor * 32)+lampa) + getSorHossz())/32] ^= 
+                        (1 << (((lampa+getSorHossz())&0b11111)));
             }
         }
-        
-        
-        int sorbanhol =((szektor*32)+(lampa)) % getSorHossz();
         // Mellette
+        int sorbanhol =((szektor*32)+(lampa)) % getSorHossz();
         int local = 0b111;
-        System.out.println((sorbanhol+1)%(getSorHossz()));
         if(getSorHossz()-1 > 0 && (((sorbanhol)%(getSorHossz()-1))) == 0){
             local = (sorbanhol == 0 ? 0b110 : 0b011);
         }
@@ -116,7 +109,6 @@ public class LightOn {
         boolean both = true;
         for (int i = 0; i < this.allapot.length-1 && both; i++) {
             both = allapot[i] == 0;
-            System.out.println(allapot[i]);
         }
         both = both ? (allapot[this.allapot.length-1] & ((1<<(getNegativ()))-1)) == 0 : false;
         return both;
