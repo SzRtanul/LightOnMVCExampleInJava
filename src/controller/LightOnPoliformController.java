@@ -46,11 +46,6 @@ public class LightOnPoliformController extends LightOnGUI1View {
     }
     
     private void doingUpdate(){
-        int szektorszam = model.getSzektorSzam();
-        int[] szektorok = new int[szektorszam];
-        for (int i = 0; i < szektorszam; i++) {
-            szektorok[i] = model.getSzektor(i);
-        }
-        view.doUpdate(szektorok, model.getNegativ());
+        view.doUpdate(model.getSzektorok(), model.getNegativ());
     }
 }

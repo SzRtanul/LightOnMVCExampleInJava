@@ -4,6 +4,7 @@
  */
 package model;
 
+import java.util.Arrays;
 import java.util.BitSet;
 import main.LightOnMVC;
 
@@ -95,6 +96,10 @@ public class LightOn {
         return szektorszam >= 0 && szektorszam < allapot.length ? 
                 allapot[szektorszam] : (szektorszam == allapot.length -1 ? 
                 allapot[szektorszam] & ((1<<(32-getNegativ()))-1) : 0);
+    }
+    
+    public int[] getSzektorok(){
+        return Arrays.copyOf(allapot, allapot.length);
     }
     
     public int getSzektorSzam(){
